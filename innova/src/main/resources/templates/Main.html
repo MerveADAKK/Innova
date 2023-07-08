@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Hello</h1>
+<button onclick="createExpense()">CREATE EXPENSE</button>
+
+<script>
+    function createExpense() {
+        let json = JSON.stringify({ amount: 5555, date: 168876, description: "tel", person: { PersonId : 1, name : "merve" ,username : "merveadak" ,password : "1234" } });
+        console.log(json);
+        fetch('http://localhost:8080/api/expenses/createExpense',{
+            method: 'POST',
+            body: json,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+
+        });
+    }
+</script>
+
+<button onclick="updateExpense()">UPDATE EXPENSE</button>
+<script>
+    function updateExpense() {
+        let expenseId = 1; // Güncellenecek harcama ID'si
+        let updatedExpense = { amount: 2, date: 123456, description: "yeni açıklama", person: { PersonId : 1, name : "merve" ,username : "merveadak" ,password : "1234" } };
+
+        fetch(`http://localhost:8080/api/expenses/updateExpense/${expenseId}`, {
+            method: 'PUT',
+            body: JSON.stringify(updatedExpense),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        });
+    }
+</script>
+
+<button onclick="deleteExpense()">DELETE EXPENSE</button>
+<script>
+    function deleteExpense() {
+        let expenseId = 4; // Silinecek harcama ID'si
+
+        fetch(`http://localhost:8080/api/expenses/deleteExpense/${expenseId}`, {
+            method: 'DELETE',
+            body: JSON.stringify(deleteExpense),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        });
+    }
+</script>
+
+<button onclick="getExpensesByPersonId()">READ EXPENSES</button>
+<script>
+    function getExpensesByPersonId() {
+        let personId = 1;
+        fetch(`http://localhost:8080/api/expenses/getExpensesByPersonId/${personId}`, {
+            method: 'GET',
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // Ekranda sonuçları göstermek için istediğiniz işlemleri yapabilirsiniz
+            })
+            .catch(error => console.log(error));
+    }
+
+</script>
+
+
+<button onclick="getTotalExpenses()">GET TOTAL EXPENSES</button>
+<script>
+    function getTotalExpenses() {
+        let personId = 1;
+        fetch(`http://localhost:8080/api/expenses/getTotalExpenses/${personId}`, {
+            method: 'GET',
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Total Expenses:", data);
+            })
+            .catch(error => console.log(error));
+    }
+</script>
+<button onclick="triggerDailyAggregation()">Trigger Daily Aggregation</button>
+<div id="dailyResult"></div>
+
+<script>
+    function triggerDailyAggregation() {
+        fetch('http://localhost:8080/api/expenses/aggregateExpenses/daily', {
+            method: 'POST',
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+            .then(response => response.text())
+            .then(data => {
+                let resultDiv = document.getElementById('dailyResult');
+                resultDiv.innerHTML = data;
+            })
+            .catch(error => console.log(error));
+    }
+</script>
+
+<button onclick="triggerWeeklyAggregation()">Trigger Weekly Aggregation</button>
+<div id="weeklyResult"></div>
+
+<script>
+    function triggerWeeklyAggregation() {
+        fetch('http://localhost:8080/api/expenses/aggregateExpenses/weekly', {
+            method: 'POST',
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+            .then(response => response.text())
+            .then(data => {
+                let resultDiv = document.getElementById('weeklyResult');
+                resultDiv.innerHTML = data;
+            })
+            .catch(error => console.log(error));
+    }
+</script>
+
+<button onclick="triggerMonthlyAggregation()">Trigger Monthly Aggregation</button>
+<div id="monthlyResult"></div>
+
+<script>
+    function triggerMonthlyAggregation() {
+        fetch('http://localhost:8080/api/expenses/aggregateExpenses/monthly', {
+            method: 'POST',
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+            .then(response => response.text())
+            .then(data => {
+                let resultDiv = document.getElementById('monthlyResult');
+                resultDiv.innerHTML = data;
+            })
+            .catch(error => console.log(error));
+    }
+</script>
+
+</body>
+</html>
